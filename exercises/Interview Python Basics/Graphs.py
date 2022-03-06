@@ -8,6 +8,9 @@
 # must be first explored to find them.
 
 
+from unittest.mock import patch
+
+
 class GraphAdjacenList:
     def __init__(self):
         self.nodes = []
@@ -34,6 +37,31 @@ class GraphAdjacenList:
         for node in self.adj_list:
             print(f'{node} ----> {[i for i in self.adj_list[node]]}')
 
+    def dfs(self, visited, node):  # function for dfs
+        if node not in visited:
+            print(node)
+            visited.add(node)
+            if node in self.adj_list:
+                for neighbour in self.adj_list[node]:
+                    self.dfs(visited,  neighbour)
+
+    def bfs(self, visited, node):
+        visited.append(node)
+        queue = []  #
+        queue.append(node)
+
+        while queue:
+            s = queue.pop(0)
+            print(s, end=" ")
+            if s in self.adj_list:
+                for neighbour in self.adj_list[s]:
+                    if neighbour not in visited:
+                        visited.append(neighbour)
+                        queue.append(neighbour)
+    # Queue horizontal - BFS
+    # Stack vertical -  DFS
+
+
 #                   Pros of Adjacency Matrix
 # The basic operations like adding an edge, removing an edge, and checking whether there is an
 # edge from vertex i to vertex j are extremely time efficient, constant time operations.
@@ -58,28 +86,93 @@ class GraphAdjMatrix:
     pass
 
     def __init__(self) -> None:
-        pass
+        self.adjMatrix = []
+        self.size = 0
+        self.vertices_no = 0
+        self.vertices = []
+
+    def add_node(self, node):
+        if node not in self.vertices:
+            self.vertices_no += 1
+            self.vertices.append(node)
+            if self.vertices_no > 1:
+                for vertice in self.adjMatrix:
+                    vertice.append(0)
+            temp = []
+            for i in range(self.vertices_no):
+                temp.append(0)
+            self.adjMatrix.append(temp)
+        else:
+            print(f'Node {node} already exists!')
+
+    def add_edge(self, v1, v2, e):
+        # Check if vertex v1 is a valid vertex
+        if v1 not in self.vertices:
+            print("Vertex ", v1, " does not exist.")
+        # Check if vertex v1 is a valid vertex
+        elif v2 not in self.vertices:
+            print("Vertex ", v2, " does not exist.")
+        # Since this code is not restricted to a directed or
+        # an undirected graph, an edge between v1 v2 does not
+        # imply that an edge exists between v2 and v1
+        else:
+            index1 = self.vertices.index(v1)
+            index2 = self.vertices.index(v2)
+            self.adjMatrix[index1][index2] = e
+
+    def print_graph(self):
+        for i in range(self.vertices_no):
+            for j in range(self.vertices_no):
+                if self.adjMatrix[i][j] != 0:
+                    print(self.vertices[i], " -> ", self.vertices[j],
+                          " edge weight: ", self.adjMatrix[i][j])
 
 
 def main():
 
     # Create graph and edges
-    graph = GraphAdjacenList()
-    graph.add_node(0)
-    graph.add_node(1)
-    graph.add_node(2)
-    graph.add_node(3)
-    graph.add_node(4)
-    graph.add_node(5)
+    graph_list = GraphAdjacenList()
+    graph_list.add_node(0)
+    graph_list.add_node(1)
+    graph_list.add_node(2)
+    graph_list.add_node(3)
+    graph_list.add_node(4)
+    graph_list.add_node(5)
 
-    graph.add_edge(0, 1)
-    graph.add_edge(0, 2)
-    graph.add_edge(0, 3)
-    graph.add_edge(1, 2)
-    graph.add_edge(5, 2)
+    graph_list.add_edge(0, 1)
+    graph_list.add_edge(0, 2)
+    graph_list.add_edge(0, 3)
+    graph_list.add_edge(3, 5)
 
-    graph.print_agraph()
+    graph_list.add_edge(1, 2)
+    graph_list.add_edge(5, 2)
+
+    graph_list.print_agraph()
+
+    visited = set()
+    graph_list.dfs(visited, 0)
+    print("DFS", visited)
+
+    visited = []
+    graph_list.bfs(visited, 0)
+    print("BFS", visited)
+
+    graph_matrix = GraphAdjMatrix()
+    graph_matrix.add_node(6)
+    graph_matrix.add_node(7)
+    graph_matrix.add_node(8)
+    graph_matrix.add_node(9)
+    graph_matrix.add_node(10)
+    graph_matrix.add_node(11)
+
+    graph_matrix.add_edge(6, 7, 1)
+    graph_matrix.add_edge(6, 8, 2)
+    graph_matrix.add_edge(6, 9, 3)
+    graph_matrix.add_edge(10, 7, 4)
+    graph_matrix.add_edge(11, 10, 5)
+    graph_matrix.print_graph()
 
 
+  #
 if __name__ == "__main__":
     main()
