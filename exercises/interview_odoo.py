@@ -32,7 +32,7 @@ def recursiveVowelsWeight(s, vowelsW) -> int:
 def matchRegex(word):
     import re
     subW = ["odoo"]
-    res = [ele for ele in test_list if(ele in test_string)]
+    res = [word for ele in test_list if(ele in test_string)]
     regexp = re.compile(r'[a-zA-Z]{4,9}')
     if regexp.match(word):
         print('matched')
